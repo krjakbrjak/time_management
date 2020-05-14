@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  dev:
+    build:
+        context: .
+        target: dev
+    volumes:
+        - .:/opt/app
+    ports:
+        - "8080:8080"
+    env_file:
+        - .env.dev
+    command: gunicorn --chdir /opt/app/src --bind 0.0.0.0:8080 --workers 1 time_manager.wsgi:application --reload
