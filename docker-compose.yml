@@ -8,6 +8,7 @@ services:
         - .:/opt/app
     ports:
         - "8080:8080"
+        - "3000:3000"
     env_file:
         - .env.dev
     command: gunicorn --chdir /opt/app/src --bind 0.0.0.0:8080 --workers 1 time_manager.wsgi:application --reload
