@@ -12,3 +12,19 @@ services:
     env_file:
         - .env.dev
     command: gunicorn --chdir /opt/app/src --bind 0.0.0.0:8080 --workers 1 time_manager.wsgi:application --reload
+  db:
+    build:
+        context: .
+        target: db
+    ports:
+        - "5432:5432"
+    environment:
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_USER=admin
+        - POSTGRES_DB=time_manager
+    volumes:
+        - postgres:/var/lib/postgresql/data
+
+volumes:
+    postgres:
+        name: db_volume

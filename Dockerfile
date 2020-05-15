@@ -5,3 +5,5 @@ COPY requirements.txt /opt/app
 
 WORKDIR /opt/app
 RUN pip install -r requirements.txt
+
+FROM postgres:latest as db
