@@ -20,3 +20,7 @@ docker-compose run dev python3 manage.py createsuperuser
 *Remote debugging* is possible via [ptvsd](https://github.com/microsoft/ptvsd)
 (run `pip install ptvsd` locally). And then the debugger can be attached to
 `localhost:3000`
+
+## Database schema
+
+![Schema](time_manager_schema.svg)
