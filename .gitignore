@@ -133,3 +133,4 @@ dmypy.json
 .vscode
 
 # time_manager
+src/static
