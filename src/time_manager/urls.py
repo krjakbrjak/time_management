@@ -17,6 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from django.conf import settings
+from django.contrib import admin
+
+# Here configures one attributes for admin site
+admin.site.site_header = 'Time Manager Administration'
+admin.site.site_title = 'Time Manager site admin'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
