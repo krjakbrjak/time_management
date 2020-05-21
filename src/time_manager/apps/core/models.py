@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from .utils import constants
 
@@ -20,7 +20,7 @@ class Request(models.Model):
     end = models.IntegerField(default=None, null=True)
     ts = models.ForeignKey(Date, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     rtype = models.ForeignKey(RequestType, default=1, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
