@@ -8,7 +8,9 @@ from django import forms
 from django.db import models
 from datetime import datetime
 
-admin.site.register(Comment)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    search_fields = ('comment',)
 
 def convert_int_to_format(value, format):
     """ Converts an integer to a date string
@@ -65,6 +67,7 @@ class RequestForm(forms.ModelForm):
 @admin.register(Request)
 class ShowDateAdmin(admin.ModelAdmin):
     form = RequestForm
+    list_filter = ('user',)
 
 @admin.register(Date)
 class DateAdmin(admin.ModelAdmin):
