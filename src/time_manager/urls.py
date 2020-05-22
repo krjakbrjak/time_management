@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.urls import include
 from django.conf import settings
 from django.contrib import admin
+from time_manager.apps.core import urls as core_urls
 
 # Here configures one attributes for admin site
 admin.site.site_header = 'Time Manager Administration'
@@ -26,6 +27,7 @@ admin.site.site_title = 'Time Manager site admin'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('admin/doc/', include('django.contrib.admindocs.urls')),
+    re_path(r'^api/', include(core_urls)),
 ]
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns

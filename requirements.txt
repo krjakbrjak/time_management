@@ -4,3 +4,4 @@ ptvsd
 gunicorn
 docutils
 ipython
+djangorestframework
