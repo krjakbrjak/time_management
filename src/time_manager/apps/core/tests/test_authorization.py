@@ -1,10 +1,11 @@
 from django.test import TestCase
-from rest_framework.test import APIClient
-
-from rest_framework.reverse import reverse
-import json
 from django.contrib.auth import get_user_model
+
+from rest_framework.test import APIClient
+from rest_framework.reverse import reverse
 from rest_framework.authtoken.models import Token
+
+import json
 
 class TestLoginRequest(TestCase):
     def setUp(self):
