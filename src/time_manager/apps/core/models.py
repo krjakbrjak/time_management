@@ -3,6 +3,24 @@ from django.contrib.auth import get_user_model
 
 from .utils import constants
 
+class ImageMimeType(models.Model):
+    name = models.TextField(null=False, unique=True)
+
+class Image(models.Model):
+    mime_type = models.ForeignKey(ImageMimeType, null=False, on_delete=models.CASCADE)
+    blob = models.BinaryField(editable=True)
+
+class Profile(models.Model):
+    '''Extends standard User model with some extra information:
+    - User's avatar
+    '''
+
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    avatar = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.user.username
+
 class Date(models.Model):
     ts = models.DateField(auto_now=False)
 
@@ -20,7 +38,7 @@ class Request(models.Model):
     end = models.IntegerField(default=None, null=True)
     ts = models.ForeignKey(Date, on_delete=models.CASCADE)
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     rtype = models.ForeignKey(RequestType, default=1, null=False, on_delete=models.CASCADE)
 
     def __str__(self):
