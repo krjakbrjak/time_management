@@ -8,6 +8,7 @@ import base64
 from .models import Profile
 from .models import Image
 from .models import ImageMimeType
+from .models import TimeRequest
 from .utils import types
 
 class DynamicFieldsMixin():
@@ -138,4 +139,20 @@ class ImageMimeTypeSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
+        fields = '__all__'
+
+class TimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeRequest
+        fields = '__all__'
+
+class TimeReadSerializer(serializers.ModelSerializer):
+    ''' Convenience serializer returning a link to user
+    instead of the actual data
+    '''
+
+    user = serializers.HyperlinkedRelatedField(view_name='core:profile-detail', read_only=True)
+
+    class Meta:
+        model = TimeRequest
         fields = '__all__'
