@@ -7,3 +7,4 @@ ipython
 djangorestframework
 pillow
 python-dateutil
+unittest-xml-reporting
