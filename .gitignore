@@ -129,8 +129,11 @@ dmypy.json
 .pyre/
 
 # editors
-*.swp
+*.sw[o,p]
 .vscode
 
 # time_manager
 src/static
+
+# tests results
+test-results.xml
