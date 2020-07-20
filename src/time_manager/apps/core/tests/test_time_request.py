@@ -48,8 +48,9 @@ class TestTimeRequest(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(len(response.data), count)
 
+        first_id = response.data[0]['id']
         # Testing if requests might be edit
-        response = self.client.patch(reverse('core:time-detail', kwargs={'pk': 1}), {
+        response = self.client.patch(reverse('core:time-detail', kwargs={'pk': first_id}), {
             'start': datetime.fromtimestamp(0)
         })
         result = parse(response.data['start'], ignoretz=True)
@@ -57,6 +58,6 @@ class TestTimeRequest(TestCase):
         self.assertEqual(datetime.fromtimestamp(0), result)
 
         # Testing if requests might be removed
-        response = self.client.delete(reverse('core:time-detail', kwargs={'pk': 1}))
+        response = self.client.delete(reverse('core:time-detail', kwargs={'pk': first_id}))
         response = self.client.get(self.url)
         self.assertEqual(len(response.data), count - 1)
