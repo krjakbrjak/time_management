@@ -20,11 +20,13 @@ from .serializers import ImageSerializer
 from .serializers import TimeSerializer
 from .serializers import TimeReadSerializer
 from .serializers import UserSerializer
+from .serializers import CommentSerializer
 from .models import Profile
 from .models import Image
 from .models import ImageMimeType
 from .models import TimeRequest
 from .models import RequestType
+from .models import Comment
 
 class ProfilePermissions(permissions.BasePermission):
     ''' Admin can do any requests,
@@ -114,23 +116,24 @@ class AddCurrentUserMixin():
     ''' Mixin that adds current user to a request
     '''
 
-    def initial(self, request, *args, **kwargs):
-        ''' Add user to request's data
-        '''
+    def create(self, request, *args, **kwargs):
+        # Unfortunately there is no easy/good way to change the original
+        # request (in this case adding current user to its data), because
+        # it is implemented as immutable. Changing private memeber _mutable
+        # is not an option, well, because it is private. The easiest
+        # approach is reimplement CreateModelMixin's create method => deepcopy
+        # original request data (it is immutable) and update its copy with user
+        # information.
+        data = request.data.copy()
+        profile = Profile.objects.get(user=request.user)
+        data['user'] = profile.id
 
-        super().initial(request, *args, **kwargs)
-
-        # User is added to request's data only inside POST method,
-        # i.e. when the instance is created
-        if request.method in ['POST']:
-            try:
-                profile = Profile.objects.get(user=request.user)
-                request.data['user'] = profile.id
-            except Profile.DoesNotExist:
-                # If this happens then user and profile are not in sync
-                raise InternalServerError()
-
-        return request
+        # the rest is original implementation of CreateModelMixin's create method.
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class TimeRequestMixin():
     ''' Implements ModelViewSet's methods
@@ -158,8 +161,12 @@ class TimeRequestMixin():
 
         return self._convert_to_hyperlink(request, response)
 
-
 class TimeView(AddCurrentUserMixin, TimeRequestMixin, viewsets.ModelViewSet):
     queryset = TimeRequest.objects.all().select_related()
     serializer_class = TimeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class CommentView(AddCurrentUserMixin, viewsets.ModelViewSet):
+    queryset = Comment.objects.all().select_related()
+    serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]

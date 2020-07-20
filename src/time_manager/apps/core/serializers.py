@@ -9,6 +9,7 @@ from .models import Profile
 from .models import Image
 from .models import ImageMimeType
 from .models import TimeRequest
+from .models import Comment
 from .utils import types
 
 class DynamicFieldsMixin():
@@ -155,4 +156,12 @@ class TimeReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimeRequest
+        fields = '__all__'
+
+class CommentSerializer(serializers.ModelSerializer):
+    ''' Comment serializer
+    '''
+
+    class Meta:
+        model = Comment
         fields = '__all__'

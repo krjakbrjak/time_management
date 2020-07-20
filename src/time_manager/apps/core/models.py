@@ -40,6 +40,7 @@ class TimeRequest(models.Model):
 class Comment(models.Model):
     comment = models.TextField(null=True, default=None)
     request = models.ForeignKey(TimeRequest, on_delete=models.CASCADE)
+    user = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         if len(self.comment) > 9:
