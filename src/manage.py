@@ -2,9 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+import argparse
 
 
-def main():
+def main(argv=sys.argv):
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'time_manager.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -17,7 +18,7 @@ def main():
         ) from exc
 
     # Attach debugger only in a debug mode
-    if settings.DEBUG:
+    if os.environ.get('DEBUG') == '1':
         # It is nice to be able to run server with 'reloading' capability, but
         # that would start two servers: 1 - app, 2 - reloader. That is how django
         # runs things internally. To avoid the problem of address being already
@@ -28,8 +29,18 @@ def main():
             import ptvsd
             ptvsd.enable_attach(address = ('0.0.0.0', 3000))
 
-    execute_from_command_line(sys.argv)
+    execute_from_command_line(argv)
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--environment', type=argparse.FileType('r'), default=())
+    args, unknown = parser.parse_known_args(sys.argv)
+    for k, v in (line.strip().split('=')
+                             for line in args.environment):
+        os.environ.setdefault(k, v)
+
+    if len(sys.argv) == 1 or sys.argv[1] in ['help', '--help']:
+        parser.print_help()
+
+    main(unknown)
