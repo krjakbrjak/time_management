@@ -10,11 +10,11 @@ https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/
 import os
 
 from django.core.wsgi import get_wsgi_application
+from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'time_manager.settings')
 
 def __enable_debugging():
-    from django.conf import settings
     # Attach debugger only in a debug mode
     if settings.DEBUG:
         try:

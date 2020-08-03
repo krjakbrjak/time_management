@@ -1,5 +1,5 @@
 from django.urls import re_path
-from .views import Authorisation
+from time_manager.apps.auth.views import Authorisation
 from .views import ProfileView
 from .views import ImageView
 from .views import TimeView
