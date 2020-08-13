@@ -109,3 +109,12 @@ class TestUserRequest(TestCase):
         original = create_image(suffix='.pdf')
         response = self._update_avatar(pk, original)
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+
+    def test_session(self):
+        response = self.client.get(reverse('core:session'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token)
+        response = self.client.get(reverse('core:session'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()['username'], self.user.username)

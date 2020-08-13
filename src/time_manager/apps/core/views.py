@@ -47,6 +47,14 @@ class ProfileView(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [ProfilePermissions]
 
+class SessionView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        return JsonResponse({
+            'username': request.user.username
+        })
+
 class ImageView(viewsets.ViewSet):
     ''' View that is able to process get requests for images (avatars)
     '''

@@ -4,6 +4,7 @@ from .views import ProfileView
 from .views import ImageView
 from .views import TimeView
 from .views import CommentView
+from .views import SessionView
 
 from rest_framework.routers import DefaultRouter
 
@@ -16,6 +17,7 @@ router.register(r'comments', CommentView, basename='comment')
 
 urlpatterns = [
     re_path(r'^login/$', Authorisation.as_view(), name='authorisation'),
+    re_path(r'^session/$', SessionView.as_view(), name='session'),
 ]
 
 urlpatterns += router.urls
