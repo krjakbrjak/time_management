@@ -94,13 +94,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
     avatar = ImageField(required=False, validators=[image_mime_type_validator])
 
-    def __init__(self, *args, **kwargs):
-        user_fields = kwargs.pop('user_fields', None)
-        super().__init__(*args, **kwargs)
-
-        if user_fields:
-            self.user = UserSerializer(**{"fields": user_fields})
-
     def create(self, validated_data):
         ''' This function accepts only user data (password/username).
         Profile specific data (avatar/erc.) should be provided in a
