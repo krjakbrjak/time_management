@@ -6,6 +6,10 @@ python-jose[cryptography]
 python-multipart
 aiohttp[speedups]
 
+alembic
+sqlalchemy
+sqlalchemy-stubs
+
 # Code quality
 flake8
 isort
