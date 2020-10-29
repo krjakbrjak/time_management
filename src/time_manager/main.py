@@ -1,6 +1,10 @@
+"""
+Defines an ASGI application.
+"""
+
 from fastapi import FastAPI
 
-from time_manager.routers import auth, users
+from time_manager.routers import auth, maintenance, users
 
 app = FastAPI(
     title="Time manager",
@@ -10,3 +14,4 @@ app = FastAPI(
 
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(maintenance.router)
