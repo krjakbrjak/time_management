@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from time_manager.routers import users
+from time_manager.routers import auth, users
 
 app = FastAPI(
     title="Time manager",
@@ -9,3 +9,4 @@ app = FastAPI(
 )
 
 app.include_router(users.router)
+app.include_router(auth.router)

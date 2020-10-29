@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from time_manager.db import Dao
 from time_manager.db.exceptions import IntegrityError, ItemNotFound
 from time_manager.routers import conflict_exception
+from time_manager.routers.common import get_user_dao
 from time_manager.schemas.extra import DetailModel, GeneralMessage
 from time_manager.schemas.user import (
     USERNAME_REGEX,
@@ -15,10 +16,6 @@ from time_manager.schemas.user import (
 from time_manager.utils.auth import get_password_hash
 
 router = APIRouter()
-
-
-def get_user_dao():
-    pass
 
 
 @router.post(
