@@ -7,14 +7,15 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.utils import get_authorization_scheme_param
 
 from time_manager.db import Dao
+from time_manager.db.sql.user import UserDao
 from time_manager.schemas.user import UserCredentials, UserDB
 from time_manager.utils.auth import create_access_token
 from time_manager.utils.auth import get_username_from_token as token_to_username
 from time_manager.utils.auth import verify_password
 
 
-def get_user_dao():
-    pass
+def get_user_dao() -> UserDao[UserDB]:
+    return UserDao[UserDB](UserDB)
 
 
 class OAuth2PasswordBearerCookie(OAuth2PasswordBearer):
