@@ -23,6 +23,9 @@ class UserBase(BaseModel):
 
     _username_validator = validator("username", allow_reuse=True)(validate_username)
 
+    class Config:
+        orm_mode = True
+
 
 class UserCredentials(BaseModel):
     username: str
