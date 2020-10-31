@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 from time_manager.db import Dao
 from time_manager.db.exceptions import IntegrityError, ItemNotFound
 from time_manager.routers import conflict_exception
-from time_manager.routers.common import get_user_dao
+from time_manager.routers.common import get_user_dao, get_username_from_token
 from time_manager.schemas.extra import DetailModel, GeneralMessage
 from time_manager.schemas.user import (
     USERNAME_REGEX,
@@ -56,6 +56,7 @@ def get_users(
     skip: Optional[int] = Query(0, ge=0),
     limit: Optional[int] = Query(-1, ge=-1),
     username: Optional[str] = Query(None, min_length=1, regex=USERNAME_REGEX),
+    current_username: str = Depends(get_username_from_token),
     db: Dao[UserDB] = Depends(get_user_dao),
 ) -> Sequence[UserDB]:
     criteria = {}
@@ -85,6 +86,7 @@ def get_users(
 def patch_user(
     user: UserDBBase,
     id: int = Path(..., ge=0),
+    current_username: str = Depends(get_username_from_token),
     db: Dao[UserDBBase] = Depends(get_user_dao),
 ) -> UserDBBase:
     try:
@@ -116,7 +118,10 @@ def patch_user(
     operation_id="put_user",
 )
 def put_user(
-    user: UserDB, id: int = Path(..., ge=0), db: Dao[UserDB] = Depends(get_user_dao)
+    user: UserDB,
+    id: int = Path(..., ge=0),
+    current_username: str = Depends(get_username_from_token),
+    db: Dao[UserDB] = Depends(get_user_dao),
 ) -> UserDB:
     try:
         ret = db.put(id, user, partial=True)
@@ -147,7 +152,9 @@ def put_user(
     operation_id="get_user_by_id",
 )
 def get_user_by_id(
-    id: int = Path(..., ge=0), db: Dao[UserDB] = Depends(get_user_dao)
+    id: int = Path(..., ge=0),
+    current_username: str = Depends(get_username_from_token),
+    db: Dao[UserDB] = Depends(get_user_dao),
 ) -> UserDB:
     try:
         ret = db.filter(**{"id": id})
@@ -180,7 +187,9 @@ def get_user_by_id(
     operation_id="delete_user",
 )
 def delete_user(
-    id: int = Path(..., ge=0), db: Dao[UserDB] = Depends(get_user_dao)
+    id: int = Path(..., ge=0),
+    current_username: str = Depends(get_username_from_token),
+    db: Dao[UserDB] = Depends(get_user_dao),
 ) -> None:
     try:
         ret = db.delete(id)

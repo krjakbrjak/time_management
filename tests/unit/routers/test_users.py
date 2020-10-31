@@ -7,11 +7,13 @@ from fastapi.testclient import TestClient
 
 from time_manager.db.exceptions import IntegrityError, ItemNotFound
 from time_manager.main import app
+from time_manager.routers.common import create_token
 from time_manager.routers.users import get_user_dao
 from time_manager.schemas.user import UserDB, UserDBBase
 from time_manager.utils.auth import verify_password
 
 client = TestClient(app)
+client.cookies.update({"Authorization": f'Bearer {create_token("AAA")}'})
 
 
 @pytest.mark.parametrize(
@@ -19,7 +21,10 @@ client = TestClient(app)
 )
 def test_get_all_users(db_items):
     dao = Mock()
-    dao.filter.return_value = db_items
+    dao.filter.side_effect = [
+        [UserDB(id=1, username="AAA", hashed_password="")],
+        db_items,
+    ]
 
     app.dependency_overrides[get_user_dao] = lambda: dao
 
@@ -99,7 +104,10 @@ def test_search_by_criteria(criteria, expected_status):
 )
 def test_get_users_check_indices(db_items, index, expected_status):
     dao = Mock()
-    dao.filter.return_value = db_items
+    dao.filter.side_effect = [
+        [UserDB(id=1, username="AAA", hashed_password="")],
+        db_items,
+    ]
 
     app.dependency_overrides[get_user_dao] = lambda: dao
 
@@ -175,6 +183,7 @@ def test_create_users(username, password, expected_return, expected_status):
 )
 def test_put_users(index, data, expected_status, expected_return):
     dao = Mock()
+    dao.filter.return_value = [UserDB(id=1, username="AAA", hashed_password="")]
     if isinstance(expected_return, Exception):
         dao.put.side_effect = expected_return
     else:
@@ -206,6 +215,7 @@ def test_put_users(index, data, expected_status, expected_return):
 )
 def test_patch_users(index, data, expected_status, expected_return):
     dao = Mock()
+    dao.filter.return_value = [UserDB(id=1, username="AAA", hashed_password="")]
     if isinstance(expected_return, Exception):
         dao.put.side_effect = expected_return
     else:
@@ -233,6 +243,7 @@ def test_patch_users(index, data, expected_status, expected_return):
 )
 def test_delete_users(index, expected_status, expected_return):
     dao = Mock()
+    dao.filter.return_value = [UserDB(id=1, username="AAA", hashed_password="")]
     if isinstance(expected_return, Exception):
         dao.delete.side_effect = expected_return
     else:
