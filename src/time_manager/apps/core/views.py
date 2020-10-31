@@ -47,6 +47,21 @@ class ProfileView(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [ProfilePermissions]
 
+class SessionView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            profile = Profile.objects.get(user__id=request.user.id)
+        except Profile.DoesNotExist:
+            # Should never enter this block: if permission_classes
+            # permit the request that means there must be a profile
+            # linked to the user.
+            raise InternalServerError()
+        return JsonResponse({
+            'profile_id': profile.id
+        })
+
 class ImageView(viewsets.ViewSet):
     ''' View that is able to process get requests for images (avatars)
     '''
@@ -60,7 +75,7 @@ class ImageView(viewsets.ViewSet):
 
 class InternalServerError(APIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    default_detail = 'Internl server error'
+    default_detail = 'Internal server error'
     default_code = 'internal_server_error'
 
 class AddCurrentUserMixin():

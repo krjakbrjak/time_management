@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
+from rest_framework import status
 
 from .serializers import UserLoginSerializer
 from .authentication import ExtendedTokenAuthentication
@@ -31,7 +32,7 @@ class Authorisation(APIView):
 
             return JsonResponse({
                 "error": 'Wrong credentials!'
-            })
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
         return JsonResponse({"error": serializer.errors})
 
@@ -39,9 +40,12 @@ class Authorisation(APIView):
         try:
             Token.objects.get(key=request.auth, user=request.user).delete()
         except:
-            return JsonResponse({"error": "no user is logged in"})
+            response = JsonResponse({"error": "no user is logged in"})
+        else:
+            response = JsonResponse({
+                'detail': 'User is logged out',
+                'user': request.user.username
+            })
+            response.delete_cookie(settings.TOKEN_SESSION_COOKIE_NAME or ExtendedTokenAuthentication.keyword)
 
-        return JsonResponse({
-            'detail': 'User is logged out',
-            'user': request.user.username
-        })
+        return response

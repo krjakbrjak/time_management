@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'time_manager.apps.auth',
+    'time_manager.apps.core',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'time_manager.apps.auth',
-    'time_manager.apps.core',
 ]
 
 
