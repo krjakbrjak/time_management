@@ -1,10 +1,19 @@
-Django
-psycopg2-binary
-ptvsd
-gunicorn
-docutils
-ipython
-djangorestframework
-pillow
-python-dateutil
-unittest-xml-reporting
+pydantic[email]
+uvicorn
+fastapi
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+aiohttp[speedups]
+
+# Code quality
+flake8
+isort
+autoflake
+black
+mypy
+
+# Testing
+pytest
+pytest-asyncio
+requests
