@@ -16,7 +16,7 @@ from time_manager.utils.settings import Server
 
 
 def run():
-    uvicorn.run(app=app, host="0.0.0.0", port=Server.port)
+    uvicorn.run(app=app, host="0.0.0.0", port=int(Server.port))
 
 
 @pytest.fixture
