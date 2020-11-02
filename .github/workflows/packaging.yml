@@ -29,4 +29,7 @@ jobs:
         pip install pytest-asyncio
     - name: Run tests
       run: |
-        pytest tests;
+        pytest tests
+    - name: Runc docker-compose build
+      run: |
+        docker-compose build
