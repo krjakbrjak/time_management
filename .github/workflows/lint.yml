@@ -32,6 +32,7 @@ jobs:
     - name: Run mypy on src
       run: |
         MYPYPATH=src mypy --namespace-packages -p time_manager
+        MYPYPATH=src mypy --namespace-packages -p time_manager_admin
     - name: Run linters on tests
       run: |
         isort -c --profile black tests/
