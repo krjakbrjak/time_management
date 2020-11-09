@@ -1,0 +1,6 @@
+{
+    "sqlite": {
+        "name": "tmp",
+        "path": "/tmp"
+    }
+}
