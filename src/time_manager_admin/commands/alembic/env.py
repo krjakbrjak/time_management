@@ -1,20 +1,17 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
-import os, sys
-from time_manager.settings import DB_URL
 from time_manager.db.sql.models.base import Base
-from time_manager.db.sql.models.user import User
+from time_manager.settings import DB_CONFIG
+from time_manager.utils.db import get_database
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-config.set_main_option("sqlalchemy.url", DB_URL)
+config.set_main_option("sqlalchemy.url", get_database(DB_CONFIG).url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -71,8 +68,7 @@ def run_migrations_online():
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata,
-            render_as_batch=True
+            connection=connection, target_metadata=target_metadata, render_as_batch=True
         )
 
         with context.begin_transaction():

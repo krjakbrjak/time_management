@@ -10,8 +10,9 @@ from sqlalchemy.orm import sessionmaker
 
 from time_manager.db.sql.models.base import Base
 from time_manager.main import app
-from time_manager.settings import DB_URL
+from time_manager.settings import DB_CONFIG
 from time_manager.utils.client import http_get
+from time_manager.utils.db import get_database
 from time_manager.utils.settings import Server
 
 
@@ -21,7 +22,7 @@ def run():
 
 @pytest.fixture
 def session():
-    engine = create_engine(DB_URL)
+    engine = create_engine(get_database(DB_CONFIG).url)
     Base.metadata.bind = engine
     Base.metadata.create_all(engine)
 
